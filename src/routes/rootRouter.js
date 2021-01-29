@@ -4,11 +4,12 @@ const rootRouter = express.Router()
 
 rootRouter.get("/set-name", (req, res) => {
   const name = req.query.name
-  res.set('Set-Cookie', `name=${name}`).send("Your name has been saved as a cookie!")
+  req.session.name = name
+  res.send("Your name has been saved as a cookie!")
 })
 
 rootRouter.get("/get-name", (req, res) => {
-  const cookieName = req.cookies.name
+  const cookieName = req.session.name
   let greeting
   if(cookieName) {
     greeting = cookieName
@@ -19,8 +20,7 @@ rootRouter.get("/get-name", (req, res) => {
 })
 
 rootRouter.get("/forget-me", (req, res) => {
-  res.clearCookie("name")
-  res.send("Cleared 'name' cookie")
+  res.session = null
+  res.send("Cleared Cookies")
 })
-
 export default rootRouter

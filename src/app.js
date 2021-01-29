@@ -2,13 +2,13 @@ import express from "express"
 import path from "path"
 import logger from "morgan"
 import bodyParser from "body-parser"
-import cookieParser from "cookie-parser"
+import cookieSession from "cookie-session"
 import hbsMiddleware from "express-handlebars"
 import { fileURLToPath } from 'url'
 import dotenv from 'dotenv'
 dotenv.config()
 
-import rootRouter from "./routes/rootRouter.js";=
+import rootRouter from "./routes/rootRouter.js";
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -29,7 +29,11 @@ app.set("view engine", "hbs")
 app.use(logger("dev"))
 app.use(express.json())
 
-app.use(cookieParser())
+app.use(cookieSession({
+  name: 'session',
+  keys: [process.env.SESSION_SECRET],
+  maxAge: 300000
+}))
 
 app.use(express.static(path.join(__dirname, "../public")))
 app.use(bodyParser.urlencoded({ extended: true }))
